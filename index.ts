@@ -114,7 +114,9 @@ async function createPlaylistItem(
   }
 }
 
-const bot = new Bot<MyContext>("YOUR_BOT_TOKEN");
+const bot = new Bot<MyContext>(
+  "YOUR_BOT_TOKEN"
+);
 bot.use(session({ initial: () => ({}) }));
 
 bot.command("start", async (ctx: MyContext) => {
@@ -171,16 +173,6 @@ bot.command("createplaylist", async (ctx: MyContext) => {
 
   await ctx.reply("Введите название нового плейлиста:");
   ctx.session.pendingAction = "createPlaylist";
-});
-bot.command("help", async (ctx) => {
-  const commands = [
-    "/start - Начать использование бота",
-    "/myplaylists - Прослушать песню из плейлиста",
-    "/createplaylist - создать плейлист",
-    "/help - Показать список доступных команд",
-  ];
-
-  await ctx.reply(commands.join("\n"));
 });
 
 bot.on(":text", async (ctx: MyContext) => {
@@ -296,6 +288,21 @@ bot.on("callback_query", async (ctx: MyContext) => {
     }
   }
 });
+
+bot.api.setMyCommands([
+  {
+    command: "/start",
+    description: "начать использование бота",
+  },
+  {
+    command: "/myplaylists",
+    description: "прослушать песню из плейлиста",
+  },
+  {
+    command: "/createplaylist",
+    description: "создать плейлист",
+  },
+]);
 
 bot.catch((err) => {
   if (err instanceof Error) {
